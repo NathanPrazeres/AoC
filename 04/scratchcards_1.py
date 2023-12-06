@@ -3,8 +3,7 @@ def readInput(file_name:str="test.in")->list:
         lines = f.read().splitlines()
     newLines = []
     for line in lines:
-        line = line.split(":")
-        line = line[1].split("|")
+        line = line.split(":")[1].split("|")
         line = [[x for x in line[0].split(' ') if x != ''], [x for x in line[1].split(' ') if x != '']]
         newLines.append(line)
     return newLines
