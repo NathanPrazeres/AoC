@@ -1,0 +1,101 @@
+cards = "J23456789TQKA"
+
+def parse(input_file:str="camel_cards.in") -> list:
+    with open(input_file) as f:
+        return [line.strip().split(' ') for line in f.readlines()]
+
+def fiveOfAKind(hand:str) -> bool:
+    for card in hand:
+        if card != 'J':
+            if len(set(hand.replace('J', card))) == 1:
+                print(hand.replace('J', card))
+                return True
+    return len(set(hand)) == 1
+
+def fourOfAKind(hand:str) -> bool:
+    for card in hand:
+        if card != 'J':
+            if hand.replace('J', card).count(card) == 4:
+                print(hand.replace('J', card))
+                return True
+    for card in hand:
+        if hand.count(card) == 4:
+            return True
+    return False
+
+def fullHouse(hand:str) -> bool:
+    if hand.count('J') == 2:
+        return len(set(hand.replace('J', ''))) == 2
+    elif hand.count('J') == 1:
+        for card in hand:
+            if card != 'J':
+                if len(set(hand.replace('J', card))) == 2:
+                    return True
+    return len(set(hand)) == 2
+
+def threeOfAKind(hand:str) -> bool:
+    for card in hand:
+        if card != 'J':
+            if hand.replace('J', card).count(card) == 3:
+                print(hand.replace('J', card))
+                return True
+    for card in hand:
+        if hand.count(card) == 3:
+            return True
+    return False
+
+def twoPair(hand:str) -> bool:
+    if hand.count('J') == 2:
+        return True
+    if hand.count('J') == 1:
+        for card in hand:
+            if card != 'J':
+                if len(set(hand.replace('J', card))) == 3:
+                    return True
+    return len(set(hand)) == 3
+
+def onePair(hand:str) -> bool:
+    if hand.count('J') == 1:
+        return True
+    return len(set(hand)) == 4
+
+def highCard(hand:str) -> bool:
+    if len(set(hand)) == 5:
+        return True
+    return True
+
+def evaluate(hand:str) -> tuple:
+    numeric_value, pos = 0, 0
+    for card in hand:
+        numeric_value += (cards.index(card)+1) * (len(cards) ** (len(hand) - pos))
+        pos += 1
+    if fiveOfAKind(hand):
+        return (7, numeric_value)
+    elif fourOfAKind(hand):
+        return (6, numeric_value)
+    elif fullHouse(hand):
+        return (5, numeric_value)
+    elif threeOfAKind(hand):
+        return (4, numeric_value)
+    elif twoPair(hand):
+        return (3, numeric_value)
+    elif onePair(hand):
+        return (2, numeric_value)
+    elif highCard(hand):
+        return (1, numeric_value)
+    else:
+        raise ValueError("That's not supposed to happen...")
+
+def rankGame(game:list) -> list:
+    return sorted(game, key=lambda x: evaluate(x[0]))
+
+def scoreGame(game:list) -> int:
+    total = 0
+    ranked_game = rankGame(game)
+    for i in range(len(ranked_game)):
+        total += (i + 1) * int(ranked_game[i][1])
+    return total
+
+if __name__ == "__main__":
+    game = parse()
+    print(scoreGame(game))
