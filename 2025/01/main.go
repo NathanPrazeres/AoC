@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func readFile(path string) ([]int, error) {
+func parseInput(path string) ([]int, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -85,7 +85,7 @@ func doorCode(input []int, clickMethod bool) int {
 }
 
 func main() {
-	input, err := readFile("input.in")
+	input, err := parseInput("input.in")
 	if err != nil {
 		panic(err)
 	}
